@@ -14,13 +14,11 @@
       background-color: #fdf5f7;
       color: #400000;
     }
-
     h2 {
       text-align: center;
       color: #800000;
       margin-bottom: 15px;
     }
-
     .logo {
       width: 80px;
       height: 80px;
@@ -35,16 +33,13 @@
       font-size: 14px;
       color: #555;
     }
-
     label {
       margin-right: 15px;
       font-weight: bold;
     }
-
     input[type="radio"] {
       margin-right: 5px;
     }
-
     input[type="file"],
     textarea,
     input[type="text"],
@@ -57,7 +52,6 @@
       border: 1px solid #ccc;
       box-sizing: border-box;
     }
-
     button {
       background-color: #800000;
       color: white;
@@ -66,11 +60,9 @@
       cursor: pointer;
       transition: background-color 0.3s;
     }
-
     button:hover {
       background-color: #a00000;
     }
-
     #previewText {
       background: #fff5f5;
       border: 1px solid #d9b3b3;
@@ -79,7 +71,6 @@
       font-size: 15px;
       margin-top: 10px;
     }
-
     #previewContainer {
       display: flex;
       flex-wrap: wrap;
@@ -87,7 +78,6 @@
       justify-content: center;
       margin-top: 10px;
     }
-
     #previewContainer img {
       width: 120px;
       height: 160px;
@@ -95,14 +85,12 @@
       border: 2px solid #800000;
       border-radius: 6px;
     }
-
     #status {
       margin-top: 10px;
       font-weight: bold;
       text-align: center;
       color: #800000;
     }
-
     canvas {
       display: none;
     }
@@ -202,15 +190,35 @@
     }
 
     async function sendToTelegram() {
-      if (photos.length === 0) return alert("กรุณาเลือกรูปภาพ");
-      if (!getSelectedJob()) return alert("กรุณาเลือกประเภทงาน");
-
-      const caption = previewText.textContent;
-      const nowStr = new Date().toLocaleString("th-TH");
+      const name = fullname.value.trim();
       const job = getSelectedJob();
       const extraMsg = extraText.value.trim();
-      const name = fullname.value.trim() || "-";
 
+      if (!name) {
+        alert("กรุณากรอกชื่อ-นามสกุล");
+        fullname.focus();
+        return;
+      }
+
+      if (/\d/.test(name)) {
+        alert("ห้ามกรอกตัวเลขในชื่อ-นามสกุล");
+        fullname.focus();
+        return;
+      }
+
+      if (!job) {
+        alert("กรุณาเลือกประเภทงาน");
+        return;
+      }
+
+      if (photos.length === 0) {
+        alert("กรุณาเลือกรูปภาพ");
+        return;
+      }
+
+      updatePreviewText(); // อัปเดตข้อความก่อนส่ง
+      const caption = previewText.textContent;
+      const nowStr = new Date().toLocaleString("th-TH");
       processedPhotos = [];
 
       for (let i = 0; i < photos.length; i++) {
